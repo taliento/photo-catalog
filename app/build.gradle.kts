@@ -41,6 +41,12 @@ android {
             useSupportLibrary = true
         }
 
+        buildConfigField(
+            "String",
+            "PHOTOFORSE_API_KEY",
+            "\"${project.findProperty("PHOTOFORSE_API_KEY")}\""
+        )
+
         // Enable room auto-migrations
         ksp {
             arg("room.schemaLocation", "$projectDir/schemas")
@@ -66,7 +72,7 @@ android {
     buildFeatures {
         compose = true
         aidl = false
-        buildConfig = false
+        buildConfig = true
         renderScript = false
         shaders = false
     }

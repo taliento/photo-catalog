@@ -24,13 +24,19 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.taliento.catalog.ui.catalog.CatalogScreen
+import com.taliento.catalog.ui.countries.presentation.CountryScreen
 
 @Composable
 fun MainNavigation() {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "main") {
-        composable("main") { CatalogScreen(modifier = Modifier.padding(16.dp)) }
+        composable("main") {
+            CountryScreen(modifier = Modifier.padding(16.dp), {
+                navController.navigate("catalog")
+            })
+        }
+        composable("catalog") { CatalogScreen(modifier = Modifier.padding(16.dp)) }
         // TODO: Add more destinations
     }
 }
