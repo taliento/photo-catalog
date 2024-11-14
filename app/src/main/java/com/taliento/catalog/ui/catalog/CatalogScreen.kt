@@ -16,64 +16,75 @@
 
 package com.taliento.catalog.ui.catalog
 
-import com.taliento.catalog.ui.theme.MyApplicationTheme
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import android.content.Context
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.taliento.catalog.ui.theme.MyApplicationTheme
+import com.taliento.catalog.utils.findActivity
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CatalogScreen(modifier: Modifier = Modifier, viewModel: CatalogScreenViewModel = hiltViewModel()) {
+fun CatalogScreen(
+    modifier: Modifier = Modifier, viewModel: CatalogScreenViewModel = hiltViewModel()
+) {
     val items by viewModel.uiState.collectAsStateWithLifecycle()
-    if (items is CatalogScreenUiState.Success) {
-        CatalogScreen(
-            items = (items as CatalogScreenUiState.Success).data,
-            onSave = viewModel::addCatalogScreen,
-            modifier = modifier
-        )
+    val context = LocalContext.current
+
+
+    Scaffold(topBar = {
+        TopAppBar(colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            titleContentColor = MaterialTheme.colorScheme.primary,
+        ), title = {
+            Text("Catalogo")
+        }, actions = {
+            //mostro la selezione del country qua
+            Text(
+                context.findActivity().getPreferences(Context.MODE_PRIVATE).getString("country", "")
+                    .orEmpty(), fontSize = 15.sp
+            )
+        })
+    }, floatingActionButton = {
+        FloatingActionButton(
+            onClick = { },
+        ) {
+            Icon(Icons.Filled.Add, "Floating action button.")
+        }
+    }) { paddings ->
+        if (items is CatalogScreenUiState.Success) {
+            CatalogScreen(
+                items = (items as CatalogScreenUiState.Success).data,
+                onSave = viewModel::addCatalogScreen,
+                modifier = modifier.padding(paddings)
+            )
+        }
     }
+
+
 }
 
 @Composable
 internal fun CatalogScreen(
-    items: List<String>,
-    onSave: (name: String) -> Unit,
-    modifier: Modifier = Modifier
+    items: List<String>, onSave: (name: String) -> Unit, modifier: Modifier = Modifier
 ) {
-    Column(modifier) {
-        var nameCatalogScreen by remember { mutableStateOf("Compose") }
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            TextField(
-                value = nameCatalogScreen,
-                onValueChange = { nameCatalogScreen = it }
-            )
 
-            Button(modifier = Modifier.width(96.dp), onClick = { onSave(nameCatalogScreen) }) {
-                Text("Save")
-            }
-        }
-        items.forEach {
-            Text("Saved item: $it")
-        }
-    }
 }
 
 // Previews

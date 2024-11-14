@@ -38,7 +38,11 @@ import com.taliento.catalog.utils.findActivity
 @Composable
 fun CountryScreen(modifier: Modifier, goToCatalog: () -> Unit, viewModel: CountriesViewModel = hiltViewModel()) {
     val countriesUiState by viewModel.countriesUiState.collectAsStateWithLifecycle()
-    Column(modifier) {
+    Column(
+        Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         when (countriesUiState) {
             CountriesUiState.Loading -> {
                 CircularProgressIndicator(
@@ -49,16 +53,9 @@ fun CountryScreen(modifier: Modifier, goToCatalog: () -> Unit, viewModel: Countr
             }
 
             is CountriesUiState.Success -> {
-                Column(
-                    Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(text = "Benvenuto", fontSize = 30.sp)
-                    Spacer(modifier = Modifier.height(16.dp))
-                    CountrySelect((countriesUiState as CountriesUiState.Success).result, goToCatalog)
-                }
-
+                Text(text = "Benvenuto", fontSize = 30.sp)
+                Spacer(modifier = Modifier.height(16.dp))
+                CountrySelect((countriesUiState as CountriesUiState.Success).result, goToCatalog)
             }
         }
     }

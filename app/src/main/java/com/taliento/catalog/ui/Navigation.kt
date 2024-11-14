@@ -36,7 +36,7 @@ fun MainNavigation() {
                 navController.navigate("catalog")
             })
         }
-        composable("catalog") { CatalogScreen(modifier = Modifier.padding(16.dp)) }
+        composable("catalog") { CatalogScreen(Modifier) }
         // TODO: Add more destinations
     }
 }
