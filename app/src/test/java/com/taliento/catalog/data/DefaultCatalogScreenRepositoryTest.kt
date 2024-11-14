@@ -16,6 +16,8 @@
 
 package com.taliento.catalog.data
 
+import com.taliento.catalog.data.local.database.Catalog
+import com.taliento.catalog.data.local.database.CatalogDao
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -23,8 +25,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import com.taliento.catalog.data.local.database.CatalogScreen
-import com.taliento.catalog.data.local.database.CatalogScreenDao
 
 /**
  * Unit tests for [DefaultCatalogScreenRepository].
@@ -43,15 +43,15 @@ class DefaultCatalogScreenRepositoryTest {
 
 }
 
-private class FakeCatalogScreenDao : CatalogScreenDao {
+private class FakeCatalogScreenDao : CatalogDao {
 
-    private val data = mutableListOf<CatalogScreen>()
+    private val data = mutableListOf<Catalog>()
 
-    override fun getCatalogScreens(): Flow<List<CatalogScreen>> = flow {
+    override fun getCatalog(): Flow<List<Catalog>> = flow {
         emit(data)
     }
 
-    override suspend fun insertCatalogScreen(item: CatalogScreen) {
+    override suspend fun insertCatalog(item: Catalog) {
         data.add(0, item)
     }
 }

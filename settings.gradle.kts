@@ -31,4 +31,3 @@ dependencyResolutionManagement {
 rootProject.name = "PhotoCatalog"
 
 include(":app")
-include(":network")
