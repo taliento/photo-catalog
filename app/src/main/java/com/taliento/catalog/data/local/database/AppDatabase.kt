@@ -18,6 +18,7 @@ package com.taliento.catalog.data.local.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.taliento.catalog.model.Catalog
 
 @Database(entities = [Catalog::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {

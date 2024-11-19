@@ -11,8 +11,8 @@ import okhttp3.Call
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
+import javax.inject.Named
 import javax.inject.Singleton
 
 /**
@@ -30,7 +30,8 @@ internal object NetworkModule {
 
     @Provides
     @Singleton
-    fun okHttpCallFactory(): Call.Factory = trace("PhotoCatalogOkHttpClient") {
+    @Named("country")
+    fun okHttpCallFactory(): Call.Factory = trace("CountryOkHttpClient") {
         OkHttpClient.Builder()
             .addInterceptor(
                 HttpLoggingInterceptor()
@@ -46,6 +47,21 @@ internal object NetworkModule {
                     .build()
                 chain.proceed(request)
             })
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    @Named("catbox")
+    fun catboxOkHttpCallFactory(): Call.Factory = trace("PhotoCatalogOkHttpClient") {
+        OkHttpClient.Builder()
+            .addInterceptor(
+                HttpLoggingInterceptor()
+                    .apply {
+                        //debugging purpose
+                        setLevel(HttpLoggingInterceptor.Level.BODY)
+                    },
+            )
             .build()
     }
 

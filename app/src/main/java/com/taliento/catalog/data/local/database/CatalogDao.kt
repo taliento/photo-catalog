@@ -17,25 +17,31 @@
 package com.taliento.catalog.data.local.database
 
 import androidx.room.Dao
-import androidx.room.Entity
+import androidx.room.Delete
 import androidx.room.Insert
-import androidx.room.PrimaryKey
 import androidx.room.Query
+import androidx.room.Update
+import com.taliento.catalog.model.Catalog
 import kotlinx.coroutines.flow.Flow
 
-@Entity
-data class Catalog(
-    val name: String
-) {
-    @PrimaryKey(autoGenerate = true)
-    var uid: Int = 0
-}
 
 @Dao
 interface CatalogDao {
-    @Query("SELECT * FROM catalog ORDER BY uid DESC LIMIT 10")
+    @Query("SELECT * FROM catalog ORDER BY uid DESC")
     fun getCatalog(): Flow<List<Catalog>>
+
+    @Query("SELECT * FROM catalog WHERE url is null ORDER BY uid DESC")
+    fun toUpload(): Flow<List<Catalog>>
+
+    @Query("SELECT * FROM catalog WHERE uid = :uid")
+    fun getByUid(uid: String): Catalog
 
     @Insert
     suspend fun insertCatalog(item: Catalog)
+
+    @Update
+    suspend fun updateCatalog(item: Catalog)
+
+    @Delete
+    suspend fun deleteCatalog(photo: Catalog)
 }

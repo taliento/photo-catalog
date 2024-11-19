@@ -16,4 +16,16 @@
 
 <resources>
     <string name="app_name">PhotoCatalog</string>
+    <string name="cambiaVista">Cambia vista</string>
+    <string name="carica_su_catbox">Carica su catbox</string>
+    <string name="aggiungi_foto">Aggiungi foto</string>
+    <string name="scatta_una_foto">Scatta una foto</string>
+    <string name="upload">Upload...</string>
+    <string name="annulla">Annulla</string>
+    <string name="url_copiato">Url copiato!</string>
+    <string name="copia_url">Copia url</string>
+    <string name="permesso_garantito">Permesso garantito</string>
+    <string name="permesso_revocato">Permesso revocato</string>
+    <string name="modifica">Modifica</string>
+    <string name="ritaglia">Ritaglia</string>
 </resources>

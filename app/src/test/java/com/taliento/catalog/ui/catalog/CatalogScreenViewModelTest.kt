@@ -17,6 +17,8 @@
 package com.taliento.catalog.ui.catalog
 
 
+import android.content.Context
+import androidx.test.InstrumentationRegistry
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -25,6 +27,12 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import com.taliento.catalog.data.CatalogScreenRepository
+import com.taliento.catalog.data.local.database.Catalog
+import com.taliento.catalog.ui.catalog.domain.repository.CatalogRepository
+import com.taliento.catalog.ui.catalog.domain.useCases.UploadPhoto
+import com.taliento.catalog.ui.catalog.presentation.CatalogScreenUiState
+import com.taliento.catalog.ui.catalog.presentation.CatalogScreenViewModel
+import org.junit.Before
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -33,27 +41,59 @@ import com.taliento.catalog.data.CatalogScreenRepository
  */
 @OptIn(ExperimentalCoroutinesApi::class) // TODO: Remove when stable
 class CatalogScreenViewModelTest {
+
+    lateinit var instrumentationContext: Context
+    lateinit var catalogScreenViewModel: CatalogScreenViewModel
+    lateinit var uploadPhotoUseCase: UploadPhoto
+    var catalogScreenRepository = FakeCatalogScreenRepository()
+    var catalogRepository = FakeCatalogRepository()
+
+    @Before
+    fun setup() {
+        instrumentationContext = InstrumentationRegistry.getInstrumentation().context
+        uploadPhotoUseCase = UploadPhoto(catalogRepository)
+        catalogScreenViewModel = CatalogScreenViewModel(context = instrumentationContext, catalogScreenRepository, uploadPhotoUseCase)
+    }
+
     @Test
     fun uiState_initiallyLoading() = runTest {
-        val viewModel = CatalogScreenViewModel(FakeCatalogScreenRepository())
-        assertEquals(viewModel.uiState.first(), CatalogScreenUiState.Loading)
+        val viewModel =
+        assertEquals(catalogScreenViewModel.uiState.first(), CatalogScreenUiState.Loading)
     }
 
     @Test
     fun uiState_onItemSaved_isDisplayed() = runTest {
-        val viewModel = CatalogScreenViewModel(FakeCatalogScreenRepository())
-        assertEquals(viewModel.uiState.first(), CatalogScreenUiState.Loading)
+        assertEquals(catalogScreenViewModel.uiState.first(), CatalogScreenUiState.Loading)
     }
 }
 
-private class FakeCatalogScreenRepository : CatalogScreenRepository {
+class FakeCatalogScreenRepository : CatalogScreenRepository {
 
-    private val data = mutableListOf<String>()
+    private val data = mutableListOf<Catalog>()
 
-    override val catalogScreens: Flow<List<String>>
+    override val catalogPhotos: Flow<List<Catalog>>
         get() = flow { emit(data.toList()) }
 
-    override suspend fun add(name: String) {
-        data.add(0, name)
+    override val toUpload: Flow<List<Catalog>>
+        get() = flow { emit(listOf()) }
+
+
+    override suspend fun add(path: String) {
+        data.add(0, Catalog(path))
     }
+
+    override suspend fun update(catalog: Catalog) {
+        //TODO
+    }
+
+    override suspend fun delete(photo: Catalog) {
+        //TODO
+    }
+}
+
+class FakeCatalogRepository : CatalogRepository {
+    override suspend fun fileUpload(content: ByteArray, fileName: String): String {
+        return "url"
+    }
+
 }

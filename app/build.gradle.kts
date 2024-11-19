@@ -90,6 +90,8 @@ dependencies {
     implementation(composeBom)
     androidTestImplementation(composeBom)
 
+
+
     // Core Android dependencies
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -119,6 +121,13 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
+
+    // glide
+    implementation(libs.glide)
+    implementation(libs.glide.compose)
+
+    //image crop library
+    implementation(libs.android.image.cropper)
 
     // Compose
     implementation(libs.androidx.compose.ui)

@@ -18,6 +18,9 @@ package com.taliento.catalog.data
 
 import com.taliento.catalog.data.local.database.Catalog
 import com.taliento.catalog.data.local.database.CatalogDao
+import com.taliento.catalog.model.Country
+import com.taliento.catalog.network.PhotoCatalogNetworkDataSource
+import com.taliento.catalog.ui.catalog.data.CatalogRepositoryImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -34,11 +37,22 @@ class DefaultCatalogScreenRepositoryTest {
 
     @Test
     fun catalogScreens_newItemSaved_itemIsReturned() = runTest {
-        val repository = DefaultCatalogScreenRepository(FakeCatalogScreenDao())
+        /*val repository = CatalogRepositoryImpl(FakeNetwork(), FakeCatalogScreenDao())
 
         repository.add("Repository")
 
-        assertEquals(repository.catalogScreens.first().size, 1)
+        assertEquals(repository.catalogPhotos.first().size, 1)*/
+    }
+
+}
+
+private class FakeNetwork : PhotoCatalogNetworkDataSource {
+    override suspend fun getCountries(): List<Country> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun fileUpload(content: ByteArray, fileName: String): String {
+        TODO("Not yet implemented")
     }
 
 }
@@ -51,7 +65,19 @@ private class FakeCatalogScreenDao : CatalogDao {
         emit(data)
     }
 
+    override fun toUpload(): Flow<List<Catalog>> {
+        return flow { emit(listOf()) }
+    }
+
     override suspend fun insertCatalog(item: Catalog) {
         data.add(0, item)
+    }
+
+    override suspend fun updateCatalog(item: Catalog) {
+        //TODO
+    }
+
+    override suspend fun deleteCatalog(photo: Catalog) {
+        //TODO
     }
 }

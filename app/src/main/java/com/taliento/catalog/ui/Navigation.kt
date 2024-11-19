@@ -16,27 +16,63 @@
 
 package com.taliento.catalog.ui
 
-import androidx.compose.foundation.layout.padding
+import android.os.Build
+import androidx.annotation.RequiresExtension
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.taliento.catalog.ui.catalog.CatalogScreen
+import androidx.navigation.navArgument
+import androidx.navigation.toRoute
+import com.taliento.catalog.model.Catalog
+import com.taliento.catalog.ui.catalog.presentation.CatalogScreenGrid
+import com.taliento.catalog.ui.catalog.presentation.DetailScreen
+import com.taliento.catalog.ui.catalog.presentation.EditPhotoScreen
 import com.taliento.catalog.ui.countries.presentation.CountryScreen
 
+@RequiresExtension(extension = Build.VERSION_CODES.R, version = 2)
 @Composable
 fun MainNavigation() {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "main") {
         composable("main") {
-            CountryScreen(modifier = Modifier.padding(16.dp), {
+            CountryScreen({
                 navController.navigate("catalog")
             })
         }
-        composable("catalog") { CatalogScreen(Modifier) }
-        // TODO: Add more destinations
+        composable("catalog") {
+            CatalogScreenGrid(Modifier) { photo ->
+                navController.navigate(photo)
+            }
+        }
+        composable<Catalog> { navBackStackEntry ->
+            val photo: Catalog = navBackStackEntry.toRoute()
+            DetailScreen(
+                photo,
+                goToEditScreen = { navController.navigate("editphoto/${photo.uid}") },
+                goBack = { navController.popBackStack() })
+
+        }
+        composable(
+            "editphoto/{uid}",
+            arguments = listOf(
+                navArgument("uid") {
+                    type = NavType.StringType
+                },
+            ),
+        ) { navBackStackEntry ->
+
+            EditPhotoScreen(
+                navBackStackEntry.arguments?.getString("uid").orEmpty(),
+                goBack = { photo ->
+                    navController.navigate(photo) {
+                        popUpTo("catalog")
+                    }
+                })
+        }
+
     }
 }

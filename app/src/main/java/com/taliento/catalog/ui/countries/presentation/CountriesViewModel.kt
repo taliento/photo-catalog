@@ -5,8 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.taliento.catalog.model.Country
 import com.taliento.catalog.ui.countries.domain.useCases.GetCountries
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
@@ -17,12 +20,36 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class CountriesViewModel @Inject constructor(
-    private val getCountriesUseCase: GetCountries
+    getCountriesUseCase: GetCountries
 ) : ViewModel() {
 
-    val countriesUiState : StateFlow<CountriesUiState> =
-        getCountriesUseCase()
-            .map<List<Country>, CountriesUiState>(CountriesUiState::Success)
+    //first state whether the search is happening or not
+    private val _isSearching = MutableStateFlow(false)
+    val isSearching = _isSearching.asStateFlow()
+
+    //second state the text typed by the user
+    private val _searchText = MutableStateFlow("")
+    val searchText = _searchText.asStateFlow()
+
+    fun onSearchTextChange(text: String) {
+        _searchText.value = text
+    }
+
+    fun onToogleSearch() {
+        _isSearching.value = !_isSearching.value
+        if (!_isSearching.value) {
+            onSearchTextChange("")
+        }
+    }
+
+    val countriesUiState: StateFlow<CountriesUiState> =
+        searchText.combine(getCountriesUseCase()) { text, countries ->
+            if (text.isEmpty()) {
+                countries
+            } else {
+                countries.filter { it.name?.uppercase()?.contains(text.trim().uppercase()) == true }
+            }
+        }.map<List<Country>, CountriesUiState>(CountriesUiState::Success)
             .onStart { emit(CountriesUiState.Loading) }
             .stateIn(
                 scope = viewModelScope,

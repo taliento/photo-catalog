@@ -1,9 +1,9 @@
 package com.taliento.catalog.ui.countries.di
 
-import com.taliento.catalog.network.retrofit.RetrofitPhotoCatalogNetwork
 import com.taliento.catalog.ui.countries.data.CountriesRepositoryImpl
 import com.taliento.catalog.ui.countries.domain.repository.CountriesRepository
 import com.taliento.catalog.ui.countries.domain.useCases.GetCountries
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,11 +15,17 @@ import javax.inject.Singleton
  */
 @Module
 @InstallIn(SingletonComponent::class)
-object CountriesModule {
+interface CountriesDataModule {
 
-    @Provides
     @Singleton
-    fun provideCountriesRepository(network: RetrofitPhotoCatalogNetwork) : CountriesRepository = CountriesRepositoryImpl(network)
+    @Binds
+    fun provideCountriesRepository(repositoryImpl: CountriesRepositoryImpl): CountriesRepository
+
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+object CountriesModule {
 
     @Provides
     @Singleton

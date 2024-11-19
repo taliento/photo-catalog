@@ -18,13 +18,13 @@ package com.taliento.catalog.data.local.di
 
 import android.content.Context
 import androidx.room.Room
+import com.taliento.catalog.data.local.database.AppDatabase
+import com.taliento.catalog.data.local.database.CatalogDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import com.taliento.catalog.data.local.database.AppDatabase
-import com.taliento.catalog.data.local.database.CatalogDao
 import javax.inject.Singleton
 
 
@@ -42,7 +42,7 @@ class DatabaseModule {
         return Room.databaseBuilder(
             appContext,
             AppDatabase::class.java,
-            "CatalogScreen"
+            "CatalogDB"
         ).build()
     }
 }

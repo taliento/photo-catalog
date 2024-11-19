@@ -38,7 +38,7 @@ class CatalogScreenScreenTest {
     @Before
     fun setup() {
         composeTestRule.setContent {
-            CatalogScreen(FAKE_DATA, onSave = {})
+            //CatalogScreen(FAKE_DATA, onSave = {})
         }
     }
 

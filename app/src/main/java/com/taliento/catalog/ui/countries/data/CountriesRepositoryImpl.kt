@@ -10,7 +10,8 @@ import javax.inject.Inject
 /**
  * Created by Davide Taliento on 14/11/24.
  */
-class CountriesRepositoryImpl(private val network: RetrofitPhotoCatalogNetwork) : CountriesRepository {
+class CountriesRepositoryImpl @Inject constructor(private val network: RetrofitPhotoCatalogNetwork) :
+    CountriesRepository {
 
     override fun getCountries(): Flow<List<Country>> =
         flow { emit(network.getCountries()) }

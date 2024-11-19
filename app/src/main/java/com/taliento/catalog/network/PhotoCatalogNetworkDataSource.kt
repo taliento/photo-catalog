@@ -8,5 +8,5 @@ import com.taliento.catalog.model.Country
 interface PhotoCatalogNetworkDataSource {
     suspend fun getCountries(): List<Country>
 
-    suspend fun fileUpload(content: ByteArray): String
+    suspend fun fileUpload(content: ByteArray, fileName: String): String
 }
