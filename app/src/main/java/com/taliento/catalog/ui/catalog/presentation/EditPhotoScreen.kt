@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.canhub.cropper.CropImageContract
@@ -88,7 +89,7 @@ fun EditPhotoScreen(
                 TopAppBar(colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.primary,
-                ), title = { Text("Modifica") }, navigationIcon = {
+                ), title = { Text(stringResource(id = R.string.modifica)) }, navigationIcon = {
                     IconButton(onClick = {
                         photo?.let {
                             goBack(it)
@@ -114,7 +115,7 @@ fun EditPhotoScreen(
                                 contentDescription = "crop rotate",
                                 tint = MaterialTheme.colorScheme.primary
                             )
-                            Text(text = "Crop")
+                            Text(text = stringResource(id = R.string.crop))
                         }
                     }
                     TextButton(onClick = {
@@ -127,7 +128,7 @@ fun EditPhotoScreen(
                                 contentDescription = "crop rotate",
                                 tint = MaterialTheme.colorScheme.primary
                             )
-                            Text(text = "Filters")
+                            Text(text = stringResource(id = R.string.filters))
                         }
                     }
                 })

@@ -28,4 +28,14 @@
     <string name="permesso_revocato">Permesso revocato</string>
     <string name="modifica">Modifica</string>
     <string name="ritaglia">Ritaglia</string>
+    <string name="da_caricare">Da caricare</string>
+    <string name="procedi">Procedi</string>
+    <string name="confirm_upload_text">Sicuro di voler procere con l\'upload?</string>
+    <string name="dettaglio">Dettaglio</string>
+    <string name="elimina">Elimina</string>
+    <string name="delete_confirm_text">Sicuro di voler eliminare?</string>
+    <string name="crop">Crop</string>
+    <string name="filters">Filtri</string>
+    <string name="lista">Lista</string>
+    <string name="griglia">Griglia</string>
 </resources>

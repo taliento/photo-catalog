@@ -185,17 +185,7 @@ fun CatalogScreenGrid(
             ), title = {
                 Text(stringResource(id = R.string.app_name))
             }, actions = {
-                IconButton(onClick = {
-                    scope.launch {
-                        viewTypeGrid.value = !viewTypeGrid.value
-                    }
-                }) {
-                    Icon(
-                        painterResource(id = if (viewTypeGrid.value) R.drawable.baseline_list_24 else R.drawable.baseline_grid_on_24),
-                        contentDescription = stringResource(id = R.string.cambiaVista),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                }
+
                 Text(
                     context.findActivity().getPreferences(Context.MODE_PRIVATE)
                         .getString("country", "").orEmpty(),
@@ -206,17 +196,37 @@ fun CatalogScreenGrid(
         },
         bottomBar = {
             BottomAppBar(actions = {
-                IconButton(onClick = {
+                TextButton(onClick = {
                     scope.launch {
                         showConfirmDialog = true
 
                     }
                 }) {
-                    Icon(
-                        painterResource(id = R.drawable.baseline_cloud_upload_24),
-                        contentDescription = stringResource(id = R.string.carica_su_catbox),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(
+                            painterResource(id = R.drawable.baseline_cloud_upload_24),
+                            contentDescription = stringResource(id = R.string.carica_su_catbox),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Text(text = stringResource(id = R.string.upload))
+                    }
+
+                }
+                TextButton(onClick = {
+                    scope.launch {
+                        viewTypeGrid.value = !viewTypeGrid.value
+                    }
+                }) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(
+                            painterResource(id = if (viewTypeGrid.value) R.drawable.baseline_list_24 else R.drawable.baseline_grid_on_24),
+                            contentDescription = stringResource(id = R.string.cambiaVista),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Text(text = stringResource(id = if (viewTypeGrid.value) R.string.lista else R.string.griglia))
+                    }
+
+
                 }
             }, floatingActionButton = {
                 FloatingActionButton(
@@ -395,9 +405,11 @@ fun CatalogScreenList(photos: List<Catalog>, modifier: Modifier) {
         itemsIndexed(photos) { index, photo ->
             ListItem(headlineContent = {
                 Row(horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
-                    Text(photo.url ?: "Da caricare", Modifier.weight(1f), overflow = TextOverflow.Ellipsis)
+                    Text(photo.url ?: stringResource(id = R.string.da_caricare), Modifier.weight(1f), overflow = TextOverflow.Ellipsis)
                     GlideImage(
-                        modifier = Modifier.height(60.dp).width(60.dp),
+                        modifier = Modifier
+                            .height(60.dp)
+                            .width(60.dp),
                         model = Uri.parse(photo.path), contentDescription = "image", contentScale = ContentScale.Crop
                     )
                 }
@@ -479,7 +491,7 @@ fun UploadConfirmDialog(onConfirm: (Boolean) -> Unit) {
                     onConfirm(true)
                 }
             ) {
-                Text("Procedi")
+                Text(stringResource(id = R.string.procedi))
             }
         },
         dismissButton = {
@@ -488,14 +500,14 @@ fun UploadConfirmDialog(onConfirm: (Boolean) -> Unit) {
                     onConfirm(false)
                 }
             ) {
-                Text("Annulla")
+                Text(stringResource(id = R.string.annulla))
             }
         },
         title = {
-            Text("Upload")
+            Text(stringResource(id = R.string.upload))
         },
         text = {
-            Text("Sicuro di voler procere con l'upload?")
+            Text(stringResource(id = R.string.confirm_upload_text))
         }
     )
 }

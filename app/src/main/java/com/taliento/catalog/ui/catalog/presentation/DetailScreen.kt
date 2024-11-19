@@ -52,7 +52,7 @@ fun DetailScreen(
         TopAppBar(colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             titleContentColor = MaterialTheme.colorScheme.primary,
-        ), title = { Text(text = "Dettaglio") }, navigationIcon = {
+        ), title = { Text(text = stringResource(id = R.string.dettaglio)) }, navigationIcon = {
             IconButton(onClick = { goBack() }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "back", tint = MaterialTheme.colorScheme.primary)
             }
@@ -104,7 +104,7 @@ fun DeleteConfirmDialog(onConfirm: (Boolean) -> Unit) {
                     onConfirm(true)
                 }
             ) {
-                Text("Elimina", color = MaterialTheme.colorScheme.error)
+                Text(stringResource(id = R.string.elimina), color = MaterialTheme.colorScheme.error)
             }
         },
         dismissButton = {
@@ -113,14 +113,14 @@ fun DeleteConfirmDialog(onConfirm: (Boolean) -> Unit) {
                     onConfirm(false)
                 }
             ) {
-                Text("Annulla")
+                Text(stringResource(id = R.string.annulla))
             }
         },
         title = {
-            Text("Elimina")
+            Text(stringResource(id = R.string.elimina))
         },
         text = {
-            Text("Sicuro di voler eliminare?")
+            Text(stringResource(id = R.string.delete_confirm_text))
         }
     )
 }
