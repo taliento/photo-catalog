@@ -63,6 +63,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -385,6 +386,7 @@ private fun AddContent(
     }
 }
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun CatalogScreenList(photos: List<Catalog>, modifier: Modifier) {
     val context = LocalContext.current
@@ -392,7 +394,14 @@ fun CatalogScreenList(photos: List<Catalog>, modifier: Modifier) {
     LazyColumn(modifier = modifier) {
         itemsIndexed(photos) { index, photo ->
             ListItem(headlineContent = {
-                Text(photo.url.orEmpty(), overflow = TextOverflow.Ellipsis)
+                Row(horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
+                    Text(photo.url ?: "Da caricare", Modifier.weight(1f), overflow = TextOverflow.Ellipsis)
+                    GlideImage(
+                        modifier = Modifier.height(60.dp).width(60.dp),
+                        model = Uri.parse(photo.path), contentDescription = "image", contentScale = ContentScale.Crop
+                    )
+                }
+
             }, leadingContent = {
                 if (photo.url.isNullOrEmpty()) {
                     IconButton(onClick = { /*TODO*/ }) {
