@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -20,9 +19,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -30,7 +29,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
@@ -97,40 +95,46 @@ fun EditPhotoScreen(
 
                     }) {
                         Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "back", tint = MaterialTheme.colorScheme.primary
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "back",
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     }
                 })
             }, bottomBar = {
                 BottomAppBar(actions = {
-                    TextButton(onClick = {
-                        val cropOptions = CropImageContractOptions(
-                            Uri.parse(photo?.path), CropImageOptions()
-                        )
-                        imageCropLauncher.launch(cropOptions)
-                    }) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    NavigationBarItem(
+                        selected = false,
+                        onClick = {
+                            val cropOptions = CropImageContractOptions(
+                                Uri.parse(photo?.path), CropImageOptions()
+                            )
+                            imageCropLauncher.launch(cropOptions)
+                        },
+                        icon = {
                             Icon(
                                 painter = painterResource(id = R.drawable.baseline_crop_rotate_24),
                                 contentDescription = "crop rotate",
                                 tint = MaterialTheme.colorScheme.primary
                             )
-                            Text(text = stringResource(id = R.string.crop))
-                        }
-                    }
-                    TextButton(onClick = {
-                        //todo
-                        Toast.makeText(context, "TODO" , Toast.LENGTH_SHORT).show()
-                    }) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        },
+                        label = { Text(text = stringResource(id = R.string.crop)) },
+                    )
+                    NavigationBarItem(
+                        selected = false,
+                        onClick = {
+                            //todo
+                            Toast.makeText(context, "TODO", Toast.LENGTH_SHORT).show()
+                        },
+                        icon = {
                             Icon(
                                 painter = painterResource(id = R.drawable.baseline_tune_24),
                                 contentDescription = "crop rotate",
                                 tint = MaterialTheme.colorScheme.primary
                             )
-                            Text(text = stringResource(id = R.string.filters))
-                        }
-                    }
+                        },
+                        label = { Text(text = stringResource(id = R.string.filters)) },
+                    )
                 })
             }) { paddingValues ->
                 Box(modifier = Modifier.padding(paddingValues)) {

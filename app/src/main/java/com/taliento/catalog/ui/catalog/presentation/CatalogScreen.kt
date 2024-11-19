@@ -47,6 +47,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
@@ -196,38 +197,39 @@ fun CatalogScreenGrid(
         },
         bottomBar = {
             BottomAppBar(actions = {
-                TextButton(onClick = {
-                    scope.launch {
-                        showConfirmDialog = true
+                NavigationBarItem(
+                    selected = false,
+                    onClick = {
+                        scope.launch {
+                            showConfirmDialog = true
 
-                    }
-                }) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        }
+                    },
+                    icon = {
                         Icon(
                             painterResource(id = R.drawable.baseline_cloud_upload_24),
                             contentDescription = stringResource(id = R.string.carica_su_catbox),
                             tint = MaterialTheme.colorScheme.primary
                         )
-                        Text(text = stringResource(id = R.string.upload))
-                    }
-
-                }
-                TextButton(onClick = {
-                    scope.launch {
-                        viewTypeGrid.value = !viewTypeGrid.value
-                    }
-                }) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    },
+                    label = { Text(text = stringResource(id = R.string.upload)) },
+                )
+                NavigationBarItem(
+                    selected = false,
+                    onClick = {
+                        scope.launch {
+                            viewTypeGrid.value = !viewTypeGrid.value
+                        }
+                    },
+                    icon = {
                         Icon(
                             painterResource(id = if (viewTypeGrid.value) R.drawable.baseline_list_24 else R.drawable.baseline_grid_on_24),
                             contentDescription = stringResource(id = R.string.cambiaVista),
                             tint = MaterialTheme.colorScheme.primary
                         )
-                        Text(text = stringResource(id = if (viewTypeGrid.value) R.string.lista else R.string.griglia))
-                    }
-
-
-                }
+                    },
+                    label = { Text(text = stringResource(id = if (viewTypeGrid.value) R.string.lista else R.string.griglia)) },
+                )
             }, floatingActionButton = {
                 FloatingActionButton(
                     onClick = {
@@ -404,13 +406,22 @@ fun CatalogScreenList(photos: List<Catalog>, modifier: Modifier) {
     LazyColumn(modifier = modifier) {
         itemsIndexed(photos) { index, photo ->
             ListItem(headlineContent = {
-                Row(horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
-                    Text(photo.url ?: stringResource(id = R.string.da_caricare), Modifier.weight(1f), overflow = TextOverflow.Ellipsis)
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        photo.url ?: stringResource(id = R.string.da_caricare),
+                        Modifier.weight(1f),
+                        overflow = TextOverflow.Ellipsis
+                    )
                     GlideImage(
                         modifier = Modifier
                             .height(60.dp)
                             .width(60.dp),
-                        model = Uri.parse(photo.path), contentDescription = "image", contentScale = ContentScale.Crop
+                        model = Uri.parse(photo.path),
+                        contentDescription = "image",
+                        contentScale = ContentScale.Crop
                     )
                 }
 
@@ -484,32 +495,23 @@ internal fun CatalogScreenGrid(
 
 @Composable
 fun UploadConfirmDialog(onConfirm: (Boolean) -> Unit) {
-    AlertDialog(onDismissRequest = { },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    onConfirm(true)
-                }
-            ) {
-                Text(stringResource(id = R.string.procedi))
-            }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = {
-                    onConfirm(false)
-                }
-            ) {
-                Text(stringResource(id = R.string.annulla))
-            }
-        },
-        title = {
-            Text(stringResource(id = R.string.upload))
-        },
-        text = {
-            Text(stringResource(id = R.string.confirm_upload_text))
+    AlertDialog(onDismissRequest = { }, confirmButton = {
+        TextButton(onClick = {
+            onConfirm(true)
+        }) {
+            Text(stringResource(id = R.string.procedi))
         }
-    )
+    }, dismissButton = {
+        TextButton(onClick = {
+            onConfirm(false)
+        }) {
+            Text(stringResource(id = R.string.annulla))
+        }
+    }, title = {
+        Text(stringResource(id = R.string.upload))
+    }, text = {
+        Text(stringResource(id = R.string.confirm_upload_text))
+    })
 }
 
 // Previews
