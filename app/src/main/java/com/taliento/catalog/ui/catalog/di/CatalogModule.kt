@@ -2,6 +2,12 @@ package com.taliento.catalog.ui.catalog.di
 
 import com.taliento.catalog.ui.catalog.data.CatalogRepositoryImpl
 import com.taliento.catalog.ui.catalog.domain.repository.CatalogRepository
+import com.taliento.catalog.ui.catalog.domain.useCases.AddPhoto
+import com.taliento.catalog.ui.catalog.domain.useCases.DeletePhoto
+import com.taliento.catalog.ui.catalog.domain.useCases.GetCatalogPhotos
+import com.taliento.catalog.ui.catalog.domain.useCases.GetCatalogPhotosToUpload
+import com.taliento.catalog.ui.catalog.domain.useCases.GetPhoto
+import com.taliento.catalog.ui.catalog.domain.useCases.UpdatePhoto
 import com.taliento.catalog.ui.catalog.domain.useCases.UploadPhoto
 import dagger.Binds
 import dagger.Module
@@ -29,4 +35,28 @@ object CatalogModule {
     @Singleton
     @Provides
     fun provideUploadPhotoUseCase(repository: CatalogRepository) = UploadPhoto(repository)
+
+    @Singleton
+    @Provides
+    fun provideAddPhotoUseCase(repository: CatalogRepository) = AddPhoto(repository)
+
+    @Singleton
+    @Provides
+    fun provideDeletePhotoUseCase(repository: CatalogRepository) = DeletePhoto(repository)
+
+    @Singleton
+    @Provides
+    fun provideGetPhotoUseCase(repository: CatalogRepository) = GetPhoto(repository)
+
+    @Singleton
+    @Provides
+    fun provideUpdatePhotoUseCase(repository: CatalogRepository) = UpdatePhoto(repository)
+
+    @Singleton
+    @Provides
+    fun provideGetCatalogPhotosUseCase(repository: CatalogRepository) = GetCatalogPhotos(repository)
+
+    @Singleton
+    @Provides
+    fun provideGetCatalogPhotosToUploadUseCase(repository: CatalogRepository) = GetCatalogPhotosToUpload(repository)
 }

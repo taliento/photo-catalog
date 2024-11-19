@@ -22,6 +22,12 @@ import androidx.test.core.app.ApplicationProvider
 import com.taliento.catalog.PhotoCatalog
 import com.taliento.catalog.model.Catalog
 import com.taliento.catalog.ui.catalog.domain.repository.CatalogRepository
+import com.taliento.catalog.ui.catalog.domain.useCases.AddPhoto
+import com.taliento.catalog.ui.catalog.domain.useCases.DeletePhoto
+import com.taliento.catalog.ui.catalog.domain.useCases.GetCatalogPhotos
+import com.taliento.catalog.ui.catalog.domain.useCases.GetCatalogPhotosToUpload
+import com.taliento.catalog.ui.catalog.domain.useCases.GetPhoto
+import com.taliento.catalog.ui.catalog.domain.useCases.UpdatePhoto
 import com.taliento.catalog.ui.catalog.domain.useCases.UploadPhoto
 import com.taliento.catalog.ui.catalog.presentation.CatalogScreenUiState
 import com.taliento.catalog.ui.catalog.presentation.CatalogScreenViewModel
@@ -51,13 +57,34 @@ class CatalogScreenViewModelTest {
     lateinit var context: Context
     lateinit var catalogScreenViewModel: CatalogScreenViewModel
     lateinit var uploadPhotoUseCase: UploadPhoto
+    lateinit var getCataloPhotosUseCase: GetCatalogPhotos
+    lateinit var getCatalogPhotosToUploadUseCase: GetCatalogPhotosToUpload
+    lateinit var addPhotoUseCase: AddPhoto
+    lateinit var deletePhotoUseCase: DeletePhoto
+    lateinit var getPhotoUseCase: GetPhoto
+    lateinit var updatePhotoUseCase: UpdatePhoto
     var catalogRepository = FakeCatalogRepository()
 
     @Before
     fun setup() {
         context = ApplicationProvider.getApplicationContext<PhotoCatalog>().applicationContext
         uploadPhotoUseCase = UploadPhoto(catalogRepository)
-        catalogScreenViewModel = CatalogScreenViewModel(context = context, catalogRepository, uploadPhotoUseCase)
+        getCataloPhotosUseCase = GetCatalogPhotos(catalogRepository)
+        getCatalogPhotosToUploadUseCase = GetCatalogPhotosToUpload(catalogRepository)
+        addPhotoUseCase = AddPhoto(catalogRepository)
+        deletePhotoUseCase = DeletePhoto(catalogRepository)
+        getPhotoUseCase = GetPhoto(catalogRepository)
+        updatePhotoUseCase = UpdatePhoto(catalogRepository)
+        catalogScreenViewModel = CatalogScreenViewModel(
+            context = context,
+            getCataloPhotosUseCase,
+            getCatalogPhotosToUploadUseCase,
+            addPhotoUseCase,
+            deletePhotoUseCase,
+            getPhotoUseCase,
+            updatePhotoUseCase,
+            uploadPhotoUseCase
+        )
     }
 
     @Test
@@ -70,14 +97,13 @@ class FakeCatalogRepository : CatalogRepository {
 
     private val data = mutableListOf<Catalog>()
 
-    override val catalogPhotos: Flow<List<Catalog>>
-        get() = flow {
-            delay(1000)
-            emit(data.toList())
-        }
 
-    override val toUpload: Flow<List<Catalog>>
-        get() = flow { emit(listOf()) }
+    override fun getCatalogPhotos(): Flow<List<Catalog>> = flow {
+        delay(1000)
+        emit(data.toList())
+    }
+
+    override fun getCatalogPhotosToUpload(): Flow<List<Catalog>> = flow { emit(listOf()) }
 
 
     override suspend fun add(path: String) {

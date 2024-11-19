@@ -50,7 +50,7 @@ class CatalogScreenRepositoryTest {
 
         repositoryImpl.add("Repository")
 
-        var catalogList = repositoryImpl.catalogPhotos.first()
+        var catalogList = repositoryImpl.getCatalogPhotos().first()
 
         assertEquals(catalogList.size, 1)
 
@@ -63,7 +63,7 @@ class CatalogScreenRepositoryTest {
 
         repositoryImpl.update(photo!!)
 
-        val updatedPhoto = repositoryImpl.catalogPhotos.first()[0]
+        val updatedPhoto = repositoryImpl.getCatalogPhotos().first()[0]
 
         assertEquals(updatedPhoto.path, "/test/path")
 
@@ -71,7 +71,7 @@ class CatalogScreenRepositoryTest {
 
         repositoryImpl.delete(photo)
 
-        catalogList = repositoryImpl.catalogPhotos.first()
+        catalogList = repositoryImpl.getCatalogPhotos().first()
 
         assertEquals(catalogList.size, 0)
 

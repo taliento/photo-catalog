@@ -7,9 +7,10 @@ import kotlinx.coroutines.flow.Flow
  * Created by Davide Taliento on 15/11/24.
  */
 interface CatalogRepository {
-    val catalogPhotos: Flow<List<Catalog>>
 
-    val toUpload: Flow<List<Catalog>>
+    fun getCatalogPhotos(): Flow<List<Catalog>>
+
+    fun getCatalogPhotosToUpload(): Flow<List<Catalog>>
 
     suspend fun add(path: String)
 

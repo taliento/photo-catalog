@@ -21,9 +21,9 @@ class CatalogRepositoryImpl @Inject constructor(
     override suspend fun fileUpload(content: ByteArray, fileName: String): String =
         network.fileUpload(content, fileName)
 
-    override val catalogPhotos: Flow<List<Catalog>> = catalogScreenDao.getCatalog()
+    override fun getCatalogPhotos(): Flow<List<Catalog>> = catalogScreenDao.getCatalog()
 
-    override val toUpload: Flow<List<Catalog>> = catalogScreenDao.toUpload()
+    override fun getCatalogPhotosToUpload(): Flow<List<Catalog>> = catalogScreenDao.toUpload()
 
     override suspend fun add(path: String) {
         catalogScreenDao.insertCatalog(Catalog(path = path))

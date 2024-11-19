@@ -6,6 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.taliento.catalog.model.Catalog
 import com.taliento.catalog.ui.catalog.domain.repository.CatalogRepository
+import com.taliento.catalog.ui.catalog.domain.useCases.AddPhoto
+import com.taliento.catalog.ui.catalog.domain.useCases.DeletePhoto
+import com.taliento.catalog.ui.catalog.domain.useCases.GetCatalogPhotos
+import com.taliento.catalog.ui.catalog.domain.useCases.GetCatalogPhotosToUpload
+import com.taliento.catalog.ui.catalog.domain.useCases.GetPhoto
+import com.taliento.catalog.ui.catalog.domain.useCases.UpdatePhoto
 import com.taliento.catalog.ui.catalog.domain.useCases.UploadPhoto
 import com.taliento.catalog.ui.catalog.presentation.CatalogScreenUiState.Success
 import com.taliento.catalog.ui.catalog.presentation.EditScreenUiState.EditSuccess
@@ -33,31 +39,36 @@ import javax.inject.Inject
 @HiltViewModel
 class CatalogScreenViewModel @Inject constructor(
     @ApplicationContext val context: Context,
-    private val catalogRepository: CatalogRepository,
+    getCatalogPhotosUseCase: GetCatalogPhotos,
+    private val getCatalogPhotosToUploadUseCase: GetCatalogPhotosToUpload,
+    private val addPhotoUseCase: AddPhoto,
+    private val deletePhotoUseCase: DeletePhoto,
+    private val getPhotoUseCase: GetPhoto,
+    private val updatePhotoUseCase: UpdatePhoto,
     private val uploadPhotoUseCase: UploadPhoto
 ) : ViewModel() {
 
     val uiState: StateFlow<CatalogScreenUiState> =
-        catalogRepository.catalogPhotos.map<List<Catalog>, CatalogScreenUiState>(::Success)
+        getCatalogPhotosUseCase().map<List<Catalog>, CatalogScreenUiState>(::Success)
             .catch { emit(CatalogScreenUiState.Error(it)) }.stateIn(
                 viewModelScope, SharingStarted.WhileSubscribed(5000), CatalogScreenUiState.Loading
             )
 
     fun addPhoto(path: String) {
         viewModelScope.launch {
-            catalogRepository.add(path)
+            addPhotoUseCase(path)
         }
     }
 
     fun deletePhoto(photo: Catalog) {
         viewModelScope.launch {
-            catalogRepository.delete(photo)
+            deletePhotoUseCase(photo)
         }
     }
 
     fun updatePhoto(photo: Catalog) {
         viewModelScope.launch {
-            catalogRepository.update(photo)
+            updatePhotoUseCase(photo)
         }
     }
 
@@ -72,7 +83,7 @@ class CatalogScreenViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     val getByUidState: StateFlow<EditScreenUiState> =
         uid.flatMapLatest { value ->
-            catalogRepository.getByUid(value).map<Catalog?, EditScreenUiState>(::EditSuccess)
+            getPhotoUseCase(value).map<Catalog?, EditScreenUiState>(::EditSuccess)
         }.stateIn(
             viewModelScope, SharingStarted.WhileSubscribed(5000), EditScreenUiState.Loading
         )
@@ -96,7 +107,7 @@ class CatalogScreenViewModel @Inject constructor(
         uploadPhotoJob = viewModelScope.launch {
             _uploadFileWithProgress.value = UploadUIState.Loading
             var uploaded = 0
-            catalogRepository.toUpload.collect { photos ->
+            getCatalogPhotosToUploadUseCase().collect { photos ->
                 val toUpload = photos.size
 
                 val uploads = photos.map { photo ->
@@ -128,7 +139,7 @@ class CatalogScreenViewModel @Inject constructor(
 
                     viewModelScope.launch {
                         photos.forEach { photo ->
-                            catalogRepository.update(photo)
+                            updatePhotoUseCase(photo)
                         }
                     }
                 }
