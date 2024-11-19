@@ -90,7 +90,6 @@ internal fun Context.createImageFile(): File {
 
 }
 
-
 internal fun Context.getBitmap(uri: Uri): Bitmap {
     val context = this
     if (Build.VERSION.SDK_INT < 28) {

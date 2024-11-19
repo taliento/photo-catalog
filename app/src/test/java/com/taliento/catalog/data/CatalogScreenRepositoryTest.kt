@@ -16,32 +16,39 @@
 
 package com.taliento.catalog.data
 
-import com.taliento.catalog.data.local.database.Catalog
 import com.taliento.catalog.data.local.database.CatalogDao
+import com.taliento.catalog.model.Catalog
 import com.taliento.catalog.model.Country
 import com.taliento.catalog.network.PhotoCatalogNetworkDataSource
 import com.taliento.catalog.ui.catalog.data.CatalogRepositoryImpl
+import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
 
 /**
- * Unit tests for [DefaultCatalogScreenRepository].
+ * Unit tests for [CatalogRepositoryImpl].
  */
 @OptIn(ExperimentalCoroutinesApi::class) // TODO: Remove when stable
-class DefaultCatalogScreenRepositoryTest {
+class CatalogScreenRepositoryTest {
+
+    private lateinit var repositoryImpl: CatalogRepositoryImpl
+
+    @Before
+    fun setup() {
+        repositoryImpl = CatalogRepositoryImpl(FakeNetwork(), FakeCatalogScreenDao())
+    }
 
     @Test
     fun catalogScreens_newItemSaved_itemIsReturned() = runTest {
-        /*val repository = CatalogRepositoryImpl(FakeNetwork(), FakeCatalogScreenDao())
 
-        repository.add("Repository")
+        repositoryImpl.add("Repository")
 
-        assertEquals(repository.catalogPhotos.first().size, 1)*/
+        assertEquals(repositoryImpl.catalogPhotos.first().size, 1)
     }
 
 }
@@ -67,6 +74,10 @@ private class FakeCatalogScreenDao : CatalogDao {
 
     override fun toUpload(): Flow<List<Catalog>> {
         return flow { emit(listOf()) }
+    }
+
+    override fun getByUid(uid: String): Catalog {
+        TODO("Not yet implemented")
     }
 
     override suspend fun insertCatalog(item: Catalog) {

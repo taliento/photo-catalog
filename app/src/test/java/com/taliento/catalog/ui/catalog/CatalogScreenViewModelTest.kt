@@ -18,21 +18,21 @@ package com.taliento.catalog.ui.catalog
 
 
 import android.content.Context
-import androidx.test.InstrumentationRegistry
+import androidx.test.core.app.ApplicationProvider
+import com.taliento.catalog.PhotoCatalog
+import com.taliento.catalog.model.Catalog
+import com.taliento.catalog.ui.catalog.domain.repository.CatalogRepository
+import com.taliento.catalog.ui.catalog.domain.useCases.UploadPhoto
+import com.taliento.catalog.ui.catalog.presentation.CatalogScreenUiState
+import com.taliento.catalog.ui.catalog.presentation.CatalogScreenViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import org.junit.Test
-import com.taliento.catalog.data.CatalogScreenRepository
-import com.taliento.catalog.data.local.database.Catalog
-import com.taliento.catalog.ui.catalog.domain.repository.CatalogRepository
-import com.taliento.catalog.ui.catalog.domain.useCases.UploadPhoto
-import com.taliento.catalog.ui.catalog.presentation.CatalogScreenUiState
-import com.taliento.catalog.ui.catalog.presentation.CatalogScreenViewModel
 import org.junit.Before
+import org.junit.Test
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -42,17 +42,16 @@ import org.junit.Before
 @OptIn(ExperimentalCoroutinesApi::class) // TODO: Remove when stable
 class CatalogScreenViewModelTest {
 
-    lateinit var instrumentationContext: Context
+    lateinit var context: Context
     lateinit var catalogScreenViewModel: CatalogScreenViewModel
     lateinit var uploadPhotoUseCase: UploadPhoto
-    var catalogScreenRepository = FakeCatalogScreenRepository()
     var catalogRepository = FakeCatalogRepository()
 
     @Before
     fun setup() {
-        instrumentationContext = InstrumentationRegistry.getInstrumentation().context
+        context = ApplicationProvider.getApplicationContext<PhotoCatalog>().applicationContext
         uploadPhotoUseCase = UploadPhoto(catalogRepository)
-        catalogScreenViewModel = CatalogScreenViewModel(context = instrumentationContext, catalogScreenRepository, uploadPhotoUseCase)
+        catalogScreenViewModel = CatalogScreenViewModel(context = context, catalogRepository, uploadPhotoUseCase)
     }
 
     @Test
@@ -67,7 +66,7 @@ class CatalogScreenViewModelTest {
     }
 }
 
-class FakeCatalogScreenRepository : CatalogScreenRepository {
+class FakeCatalogRepository : CatalogRepository {
 
     private val data = mutableListOf<Catalog>()
 
@@ -89,11 +88,12 @@ class FakeCatalogScreenRepository : CatalogScreenRepository {
     override suspend fun delete(photo: Catalog) {
         //TODO
     }
-}
 
-class FakeCatalogRepository : CatalogRepository {
+    override suspend fun getByUid(uid: String): Flow<Catalog> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun fileUpload(content: ByteArray, fileName: String): String {
         return "url"
     }
-
 }
