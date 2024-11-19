@@ -89,7 +89,7 @@ class FakeCatalogRepository : CatalogRepository {
         //TODO
     }
 
-    override suspend fun getByUid(uid: String): Flow<Catalog> {
+    override suspend fun getByUid(uid: Int): Flow<Catalog> {
         TODO("Not yet implemented")
     }
 

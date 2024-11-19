@@ -65,13 +65,17 @@ fun MainNavigation() {
             ),
         ) { navBackStackEntry ->
 
-            EditPhotoScreen(
-                navBackStackEntry.arguments?.getString("uid").orEmpty(),
-                goBack = { photo ->
-                    navController.navigate(photo) {
-                        popUpTo("catalog")
-                    }
-                })
+            val uid = navBackStackEntry.arguments?.getString("uid")?.toInt()
+            uid?.let {
+                EditPhotoScreen(
+                    it,
+                    goBack = { photo ->
+                        navController.navigate(photo) {
+                            popUpTo("catalog")
+                        }
+                    })
+            }
+
         }
 
     }

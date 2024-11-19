@@ -34,7 +34,7 @@ interface CatalogDao {
     fun toUpload(): Flow<List<Catalog>>
 
     @Query("SELECT * FROM catalog WHERE uid = :uid")
-    fun getByUid(uid: String): Catalog
+    fun getByUid(uid: Int): Catalog?
 
     @Insert
     suspend fun insertCatalog(item: Catalog)

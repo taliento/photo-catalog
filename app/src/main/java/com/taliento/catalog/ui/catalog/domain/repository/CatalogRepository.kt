@@ -17,7 +17,7 @@ interface CatalogRepository {
 
     suspend fun delete(photo: Catalog)
 
-    suspend fun getByUid(uid: String): Flow<Catalog>
+    suspend fun getByUid(uid: Int): Flow<Catalog?>
 
     suspend fun fileUpload(content: ByteArray, fileName: String): String
 }

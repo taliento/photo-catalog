@@ -62,17 +62,17 @@ class CatalogScreenViewModel @Inject constructor(
     }
 
     //second state the text typed by the user
-    private val _uid = MutableStateFlow("")
+    private val _uid = MutableStateFlow(0)
     val uid = _uid.asStateFlow()
 
-    fun setUid(uid: String) {
+    fun setUid(uid: Int) {
         _uid.value = uid
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val getByUidState: StateFlow<EditScreenUiState> =
         uid.flatMapLatest { value ->
-            catalogRepository.getByUid(value).map<Catalog, EditScreenUiState>(::EditSuccess)
+            catalogRepository.getByUid(value).map<Catalog?, EditScreenUiState>(::EditSuccess)
         }.stateIn(
             viewModelScope, SharingStarted.WhileSubscribed(5000), EditScreenUiState.Loading
         )

@@ -22,6 +22,8 @@ import com.taliento.catalog.model.Country
 import com.taliento.catalog.network.PhotoCatalogNetworkDataSource
 import com.taliento.catalog.ui.catalog.data.CatalogRepositoryImpl
 import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertNotNull
+import junit.framework.TestCase.assertNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -44,12 +46,38 @@ class CatalogScreenRepositoryTest {
     }
 
     @Test
-    fun catalogScreens_newItemSaved_itemIsReturned() = runTest {
+    fun catalogScreens_photo_crud() = runTest {
 
         repositoryImpl.add("Repository")
 
-        assertEquals(repositoryImpl.catalogPhotos.first().size, 1)
+        var catalogList = repositoryImpl.catalogPhotos.first()
+
+        assertEquals(catalogList.size, 1)
+
+        val photo = repositoryImpl.getByUid(catalogList[0].uid).first()
+
+        assertNotNull(photo)
+
+        photo?.path = "/test/path"
+        photo?.url = "/test/url"
+
+        repositoryImpl.update(photo!!)
+
+        val updatedPhoto = repositoryImpl.catalogPhotos.first()[0]
+
+        assertEquals(updatedPhoto.path, "/test/path")
+
+        assertEquals(updatedPhoto.url, "/test/url")
+
+        repositoryImpl.delete(photo)
+
+        catalogList = repositoryImpl.catalogPhotos.first()
+
+        assertEquals(catalogList.size, 0)
+
     }
+
+
 
 }
 
@@ -76,8 +104,8 @@ private class FakeCatalogScreenDao : CatalogDao {
         return flow { emit(listOf()) }
     }
 
-    override fun getByUid(uid: String): Catalog {
-        TODO("Not yet implemented")
+    override fun getByUid(uid: Int): Catalog? {
+        return data.find { it.uid == uid }
     }
 
     override suspend fun insertCatalog(item: Catalog) {
@@ -85,10 +113,12 @@ private class FakeCatalogScreenDao : CatalogDao {
     }
 
     override suspend fun updateCatalog(item: Catalog) {
-        //TODO
+        val toRemove = data.find { it.uid == item.uid }
+        data.remove(toRemove)
+        data.add(item)
     }
 
     override suspend fun deleteCatalog(photo: Catalog) {
-        //TODO
+        data.remove(photo)
     }
 }

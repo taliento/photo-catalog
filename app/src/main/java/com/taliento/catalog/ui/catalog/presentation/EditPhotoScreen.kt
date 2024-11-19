@@ -50,7 +50,7 @@ import com.taliento.catalog.utils.getBitmap
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditPhotoScreen(
-    uid: String, goBack: (Catalog) -> Unit, viewModel: CatalogScreenViewModel = hiltViewModel()
+    uid: Int, goBack: (Catalog) -> Unit, viewModel: CatalogScreenViewModel = hiltViewModel()
 ) {
     var bitmap: Bitmap? by remember { mutableStateOf(null) }
     val context = LocalContext.current as Activity
@@ -61,35 +61,23 @@ fun EditPhotoScreen(
         is EditScreenUiState.EditSuccess -> {
 
             val photo = (uidState as EditScreenUiState.EditSuccess).data
-            bitmap = context.getBitmap(Uri.parse(photo.path))
+            bitmap = context.getBitmap(Uri.parse(photo?.path))
 
             val imageCropLauncher =
                 rememberLauncherForActivityResult(contract = CropImageContract()) { result ->
                     if (result.isSuccessful) {
-                        result.uriContent?.let {
+                        result.uriContent?.let { uri ->
 
                             bitmap = if (Build.VERSION.SDK_INT < 28) {
-                                MediaStore.Images.Media.getBitmap(context.contentResolver, it)
+                                MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
                             } else {
-                                val source = ImageDecoder.createSource(context.contentResolver, it)
+                                val source = ImageDecoder.createSource(context.contentResolver, uri)
                                 ImageDecoder.decodeBitmap(source)
                             }
-                            photo.path = it.toString()
-                            viewModel.updatePhoto(photo)
-
-                            /*var outputStream: OutputStream? = null
-                            try {
-                                outputStream = context.contentResolver.openOutputStream(Uri.parse(photo.path))
-                                outputStream.use { out ->
-                                    bitmap?.compress(
-                                        Bitmap.CompressFormat.PNG, 100, out!!
-                                    ) // bmp is your Bitmap instance
-                                }
-                            } catch (e: IOException) {
-                                e.printStackTrace()
-                            } finally {
-                                outputStream?.close()
-                            }*/
+                            photo?.path = uri.toString()
+                            photo?.let {
+                                viewModel.updatePhoto(it)
+                            }
                         }
 
                     }
@@ -100,7 +88,12 @@ fun EditPhotoScreen(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ), title = { Text("Modifica") }, navigationIcon = {
-                    IconButton(onClick = { goBack(photo) }) {
+                    IconButton(onClick = {
+                        photo?.let {
+                            goBack(it)
+                        }
+
+                    }) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "back", tint = MaterialTheme.colorScheme.primary
                         )
@@ -110,7 +103,7 @@ fun EditPhotoScreen(
                 BottomAppBar(actions = {
                     TextButton(onClick = {
                         val cropOptions = CropImageContractOptions(
-                            Uri.parse(photo.path), CropImageOptions()
+                            Uri.parse(photo?.path), CropImageOptions()
                         )
                         imageCropLauncher.launch(cropOptions)
                     }) {

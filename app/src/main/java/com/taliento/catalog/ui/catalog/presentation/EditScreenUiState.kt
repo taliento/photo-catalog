@@ -8,5 +8,5 @@ import com.taliento.catalog.model.Catalog
 interface EditScreenUiState {
     object Loading : EditScreenUiState
     data class Error(val throwable: Throwable) : EditScreenUiState
-    data class EditSuccess(val data: Catalog) : EditScreenUiState
+    data class EditSuccess(val data: Catalog?) : EditScreenUiState
 }
