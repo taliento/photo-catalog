@@ -56,7 +56,6 @@ fun CountryScreen(goToCatalog: () -> Unit, viewModel: CountriesViewModel = hiltV
                     onExpandedChange = {},
                     placeholder = { Text("Cerca...") },
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-                    trailingIcon = { Icon(Icons.Default.MoreVert, contentDescription = null) },
                 )
             },
             expanded = false,
