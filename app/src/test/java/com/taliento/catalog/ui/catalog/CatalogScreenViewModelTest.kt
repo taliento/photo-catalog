@@ -26,6 +26,7 @@ import com.taliento.catalog.ui.catalog.domain.useCases.UploadPhoto
 import com.taliento.catalog.ui.catalog.presentation.CatalogScreenUiState
 import com.taliento.catalog.ui.catalog.presentation.CatalogScreenViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -33,6 +34,9 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -40,6 +44,8 @@ import org.junit.Test
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 @OptIn(ExperimentalCoroutinesApi::class) // TODO: Remove when stable
+@Config(application = PhotoCatalog::class)
+@RunWith(RobolectricTestRunner::class)
 class CatalogScreenViewModelTest {
 
     lateinit var context: Context
@@ -56,12 +62,6 @@ class CatalogScreenViewModelTest {
 
     @Test
     fun uiState_initiallyLoading() = runTest {
-        val viewModel =
-        assertEquals(catalogScreenViewModel.uiState.first(), CatalogScreenUiState.Loading)
-    }
-
-    @Test
-    fun uiState_onItemSaved_isDisplayed() = runTest {
         assertEquals(catalogScreenViewModel.uiState.first(), CatalogScreenUiState.Loading)
     }
 }
@@ -71,7 +71,10 @@ class FakeCatalogRepository : CatalogRepository {
     private val data = mutableListOf<Catalog>()
 
     override val catalogPhotos: Flow<List<Catalog>>
-        get() = flow { emit(data.toList()) }
+        get() = flow {
+            delay(1000)
+            emit(data.toList())
+        }
 
     override val toUpload: Flow<List<Catalog>>
         get() = flow { emit(listOf()) }
