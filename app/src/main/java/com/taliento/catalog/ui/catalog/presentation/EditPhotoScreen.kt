@@ -6,6 +6,7 @@ import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -114,6 +115,19 @@ fun EditPhotoScreen(
                                 tint = MaterialTheme.colorScheme.primary
                             )
                             Text(text = "Crop")
+                        }
+                    }
+                    TextButton(onClick = {
+                        //todo
+                        Toast.makeText(context, "TODO" , Toast.LENGTH_SHORT).show()
+                    }) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.baseline_tune_24),
+                                contentDescription = "crop rotate",
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                            Text(text = "Filters")
                         }
                     }
                 })
