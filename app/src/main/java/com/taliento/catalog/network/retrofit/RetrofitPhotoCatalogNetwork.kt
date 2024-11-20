@@ -1,6 +1,5 @@
 package com.taliento.catalog.network.retrofit
 
-import android.util.Log
 import androidx.compose.ui.util.trace
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.taliento.catalog.model.Country
@@ -62,12 +61,7 @@ class RetrofitPhotoCatalogNetwork @Inject constructor(
     override suspend fun fileUpload(content: ByteArray, fileName: String): String {
         val filePart =
             MultipartBody.Part.createFormData("fileToUpload", fileName, content.toRequestBody())
-        try {
             return catboxNetworkApi.fileUpload(filePart).string()
-        } catch (e: Exception) {
-            Log.e("fileUpload", e.toString())
-            return ""
-        }
     }
 
 }
