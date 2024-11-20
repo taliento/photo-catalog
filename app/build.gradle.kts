@@ -54,8 +54,11 @@ android {
     }
 
     buildTypes {
-        getByName("release") {
+        getByName("debug") {
             isMinifyEnabled = false
+        }
+        getByName("release") {
+            isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
@@ -145,7 +148,7 @@ dependencies {
     testImplementation(libs.robolectric)
 
     // Instrumented tests: jUnit rules and runners
-
+    debugImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.runner)
