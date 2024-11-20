@@ -2,6 +2,7 @@ package com.taliento.catalog.ui.catalog.presentation
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.taliento.catalog.model.Catalog
@@ -18,6 +19,8 @@ import com.taliento.catalog.utils.compressImageBytes
 import com.taliento.catalog.utils.getFileName
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
@@ -54,7 +57,10 @@ class CatalogScreenViewModel @Inject constructor(
             )
 
     fun addPhoto(path: String) {
-        viewModelScope.launch {
+        val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+            Log.e("AddPhoto", throwable.message.toString())
+        }
+        viewModelScope.launch(IO + coroutineExceptionHandler) {
             addPhotoUseCase(path)
         }
     }
@@ -83,6 +89,7 @@ class CatalogScreenViewModel @Inject constructor(
     val getByUidState: StateFlow<EditScreenUiState> =
         uid.flatMapLatest { value ->
             getPhotoUseCase(value).map<Catalog?, EditScreenUiState>(::EditSuccess)
+                .catch { emit(EditScreenUiState.Error(it)) }
         }.stateIn(
             viewModelScope, SharingStarted.WhileSubscribed(5000), EditScreenUiState.Loading
         )
@@ -122,13 +129,20 @@ class CatalogScreenViewModel @Inject constructor(
 
                 //in questa maniera vengono eseguite in concorrenza ma posso aggiornare lo stato del singolo thread
                 uploads.map {
-                    val result = it.await()
-                    val url: String = result.second
-                    uploaded++
-                    _uploadProgress.value = uploaded.toFloat() / toUpload
-                    if (url.isNotEmpty()) {
-                        result.first.url = url
+                    try {
+                        val result = it.await()
+                        val url: String = result.second
+                        uploaded++
+                        _uploadProgress.value = uploaded.toFloat() / toUpload
+                        if (url.isNotEmpty()) {
+                            result.first.url = url
+                        } else {
+                            Log.d("UploadPhoto", "Upload problem!")
+                        }
+                    } catch (exception: Exception) {
+                        Log.e("UploadPhoto", exception.message.toString())
                     }
+
                 }
 
                 if (uploaded == toUpload) {

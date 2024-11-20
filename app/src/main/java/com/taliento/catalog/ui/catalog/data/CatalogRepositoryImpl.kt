@@ -1,5 +1,6 @@
 package com.taliento.catalog.ui.catalog.data
 
+import android.util.Log
 import com.taliento.catalog.data.local.database.CatalogDao
 import com.taliento.catalog.model.Catalog
 import com.taliento.catalog.network.PhotoCatalogNetworkDataSource
@@ -8,6 +9,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import java.io.IOException
 import javax.inject.Inject
 
 /**
@@ -25,15 +27,28 @@ class CatalogRepositoryImpl @Inject constructor(
     override fun getCatalogPhotosToUpload(): Flow<List<Catalog>> = catalogScreenDao.toUpload()
 
     override suspend fun add(path: String) {
-        catalogScreenDao.insertCatalog(Catalog(path = path))
+        try {
+            catalogScreenDao.insertCatalog(Catalog(path = path))
+        } catch (exception: Exception) {
+            Log.e("CatalogDao", "Failed to add photo", exception)
+        }
     }
 
     override suspend fun update(catalog: Catalog) {
-        catalogScreenDao.updateCatalog(catalog)
+        try {
+            catalogScreenDao.updateCatalog(catalog)
+        } catch (exception: Exception) {
+            Log.e("CatalogDao", "Failed to update photo", exception)
+        }
+
     }
 
     override suspend fun delete(photo: Catalog) {
-        catalogScreenDao.deleteCatalog(photo)
+        try {
+            catalogScreenDao.deleteCatalog(photo)
+        } catch (exception: Exception) {
+            Log.e("CatalogDao", "Failed to delete photo", exception)
+        }
     }
 
     override suspend fun getByUid(uid: Int): Flow<Catalog?> {

@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
@@ -50,6 +51,7 @@ class CountriesViewModel @Inject constructor(
                 countries.filter { it.name?.uppercase()?.contains(text.trim().uppercase()) == true }
             }
         }.map<List<Country>, CountriesUiState>(CountriesUiState::Success)
+            .catch { emit(CountriesUiState.Error(it)) }
             .onStart { emit(CountriesUiState.Loading) }
             .stateIn(
                 scope = viewModelScope,

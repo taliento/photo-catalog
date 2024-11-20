@@ -1,6 +1,7 @@
 package com.taliento.catalog.ui.countries.presentation
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -101,6 +102,11 @@ fun CountryScreen(goToCatalog: () -> Unit, viewModel: CountriesViewModel = hiltV
                                 HorizontalDivider()
                         }
                     }
+                }
+
+                is CountriesUiState.Error -> {
+                    val errore = (countriesList as CountriesUiState.Error).throwable.message
+                    Toast.makeText(context, "Errore: $errore", Toast.LENGTH_LONG).show()
                 }
             }
         }

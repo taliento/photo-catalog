@@ -8,6 +8,6 @@ import com.taliento.catalog.model.Country
 sealed interface CountriesUiState {
 
     data object Loading : CountriesUiState
-
+    data class Error(val throwable: Throwable) : CountriesUiState
     data class Success(val result: List<Country>) : CountriesUiState
 }

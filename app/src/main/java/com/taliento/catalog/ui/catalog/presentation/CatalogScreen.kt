@@ -247,7 +247,10 @@ fun CatalogScreenGrid(
         },
     ) { paddings ->
         when (catalogState) {
-            is CatalogScreenUiState.Error -> TODO()
+            is CatalogScreenUiState.Error -> {
+                val error = (catalogState as CatalogScreenUiState.Error).throwable.message
+                Toast.makeText(context, "Errore: $error", Toast.LENGTH_LONG).show()
+            }
             CatalogScreenUiState.Loading -> CircularProgressIndicator(
                 modifier = Modifier.width(64.dp),
                 color = MaterialTheme.colorScheme.secondary,
