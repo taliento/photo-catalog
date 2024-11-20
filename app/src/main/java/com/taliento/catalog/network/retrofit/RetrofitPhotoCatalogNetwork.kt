@@ -61,7 +61,7 @@ class RetrofitPhotoCatalogNetwork @Inject constructor(
     override suspend fun fileUpload(content: ByteArray, fileName: String): String {
         val filePart =
             MultipartBody.Part.createFormData("fileToUpload", fileName, content.toRequestBody())
-            return catboxNetworkApi.fileUpload(filePart).string()
+        return catboxNetworkApi.fileUpload(filePart).string()
     }
 
 }
