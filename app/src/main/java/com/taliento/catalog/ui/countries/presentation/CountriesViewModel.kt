@@ -53,7 +53,7 @@ class CountriesViewModel @Inject constructor(
             }
         }.map<List<Country>, CountriesUiState>(CountriesUiState::Success)
             .catch {
-                Log.e("GetCountries" , it.message.toString())
+                Log.e("GetCountries", it.message.toString())
                 emit(CountriesUiState.Error(it))
             }
             .onStart { emit(CountriesUiState.Loading) }

@@ -1,9 +1,7 @@
 package com.taliento.catalog.ui.catalog.presentation
 
 import android.net.Uri
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -26,7 +24,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -56,7 +53,11 @@ fun DetailScreen(
             titleContentColor = MaterialTheme.colorScheme.primary,
         ), title = { Text(text = stringResource(id = R.string.dettaglio)) }, navigationIcon = {
             IconButton(onClick = { goBack() }) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "back", tint = MaterialTheme.colorScheme.primary)
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "back",
+                    tint = MaterialTheme.colorScheme.primary
+                )
             }
         })
     }, bottomBar = {
@@ -77,7 +78,11 @@ fun DetailScreen(
         })
     }) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
-            GlideImage(model = Uri.parse(photo.path), contentDescription = "image", modifier = Modifier.fillMaxSize())
+            GlideImage(
+                model = Uri.parse(photo.path),
+                contentDescription = "image",
+                modifier = Modifier.fillMaxSize()
+            )
         }
 
 

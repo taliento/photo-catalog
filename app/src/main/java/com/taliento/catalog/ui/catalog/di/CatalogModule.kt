@@ -58,5 +58,6 @@ object CatalogModule {
 
     @Singleton
     @Provides
-    fun provideGetCatalogPhotosToUploadUseCase(repository: CatalogRepository) = GetCatalogPhotosToUpload(repository)
+    fun provideGetCatalogPhotosToUploadUseCase(repository: CatalogRepository) =
+        GetCatalogPhotosToUpload(repository)
 }

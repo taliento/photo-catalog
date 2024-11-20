@@ -62,6 +62,7 @@ fun EditPhotoScreen(
             val error = (uidState as EditScreenUiState.Error).throwable.message
             Toast.makeText(context, "Errore: $error", Toast.LENGTH_LONG).show()
         }
+
         is EditScreenUiState.EditSuccess -> {
 
             val photo = (uidState as EditScreenUiState.EditSuccess).data
