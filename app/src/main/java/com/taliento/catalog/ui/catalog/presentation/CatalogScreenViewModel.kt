@@ -5,7 +5,6 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.taliento.catalog.model.Catalog
-import com.taliento.catalog.ui.catalog.domain.repository.CatalogRepository
 import com.taliento.catalog.ui.catalog.domain.useCases.AddPhoto
 import com.taliento.catalog.ui.catalog.domain.useCases.DeletePhoto
 import com.taliento.catalog.ui.catalog.domain.useCases.GetCatalogPhotos

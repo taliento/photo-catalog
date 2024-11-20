@@ -3,7 +3,6 @@ package com.taliento.catalog.ui.catalog.data
 import com.taliento.catalog.data.local.database.CatalogDao
 import com.taliento.catalog.model.Catalog
 import com.taliento.catalog.network.PhotoCatalogNetworkDataSource
-import com.taliento.catalog.network.retrofit.RetrofitPhotoCatalogNetwork
 import com.taliento.catalog.ui.catalog.domain.repository.CatalogRepository
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.Flow
