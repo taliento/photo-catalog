@@ -1,5 +1,6 @@
 package com.taliento.catalog.ui.countries.presentation
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.taliento.catalog.model.Country
@@ -51,7 +52,10 @@ class CountriesViewModel @Inject constructor(
                 countries.filter { it.name?.uppercase()?.contains(text.trim().uppercase()) == true }
             }
         }.map<List<Country>, CountriesUiState>(CountriesUiState::Success)
-            .catch { emit(CountriesUiState.Error(it)) }
+            .catch {
+                Log.e("GetCountries" , it.message.toString())
+                emit(CountriesUiState.Error(it))
+            }
             .onStart { emit(CountriesUiState.Loading) }
             .stateIn(
                 scope = viewModelScope,
