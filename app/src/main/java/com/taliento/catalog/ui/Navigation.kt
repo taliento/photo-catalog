@@ -16,8 +16,6 @@
 
 package com.taliento.catalog.ui
 
-import android.os.Build
-import androidx.annotation.RequiresExtension
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavType
@@ -32,7 +30,6 @@ import com.taliento.catalog.ui.catalog.presentation.DetailScreen
 import com.taliento.catalog.ui.catalog.presentation.EditPhotoScreen
 import com.taliento.catalog.ui.countries.presentation.CountryScreen
 
-@RequiresExtension(extension = Build.VERSION_CODES.R, version = 2)
 @Composable
 fun MainNavigation() {
     val navController = rememberNavController()
